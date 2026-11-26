@@ -41,10 +41,12 @@ export default function Projects({ projects, loading }: { projects: Project[]; l
                       <li key={t} className="rounded-md bg-slate-800 px-2 py-0.5 font-mono text-xs text-slate-300">{t}</li>
                     ))}
                   </ul>
-                  <div className="mt-5 flex gap-4 text-sm font-medium">
-                    {p.github_url && <a href={p.github_url} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-cyan-400">Code</a>}
-                    {p.live_url && <a href={p.live_url} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-cyan-400">Live demo</a>}
-                  </div>
+                  {(p.github_url || p.live_url) && (
+                    <div className="mt-5 flex gap-4 text-sm font-medium">
+                      {p.github_url && <a href={p.github_url} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-cyan-400">Code</a>}
+                      {p.live_url && <a href={p.live_url} target="_blank" rel="noreferrer" className="text-slate-300 hover:text-cyan-400">Live demo</a>}
+                    </div>
+                  )}
                 </div>
               </article>
             )
