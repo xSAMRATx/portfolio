@@ -110,6 +110,19 @@ Skills with an empty `level` are shown as tags; give a skill a 0–100 level to 
   dev server (hot reload), after `npm run build` from `public/build`.
 - The React API client calls `/api/...` on the same origin. Admin auth is a Sanctum bearer token (stored in the browser).
 - `config/cors.php` allows no other origins by default. Set `CORS_ALLOWED_ORIGINS` only if another site must call the API.
+- `SpaController` fills the page `<title>`, description and Open Graph tags from the profile in the database, so shared
+  links show your real name and intro. Admin pages get `noindex`.
+
+### Design system
+
+- Colours live as CSS variables in `resources/css/app.css` (`:root` = light, `.dark` = dark) and are used through
+  Tailwind names like `bg-page`, `bg-card`, `text-fg`, `text-muted`, `border-line`, `text-accent`. Change the palette
+  there once and both themes follow.
+- Dark/light: follows the system by default; the toggle remembers the choice in `localStorage`. A tiny script in
+  `app.blade.php` sets the theme before the first paint, so there is no flash.
+- Font: Inter, self-hosted from `@fontsource-variable/inter` (no CDN).
+- Animations use Tailwind `motion-safe:`, so people with "reduce motion" turned on get no animation.
+- Shared UI: `components/ui/` (buttons/inputs in `styles.ts`, `Icon`, `FormField`, `Toast`, `ConfirmDialog`).
 
 ## Project structure
 
@@ -122,12 +135,15 @@ database/seeders/                  PortfolioSeeder (content), AdminUserSeeder
 routes/api.php                     API routes
 routes/web.php                     catch-all route for the React app
 resources/views/app.blade.php      the HTML shell
-resources/css/app.css              Tailwind entry
+resources/css/app.css              Tailwind entry + theme colours
 resources/js/                      React app
-  main.tsx, App.tsx                entry + routes
+  main.tsx, App.tsx                entry + routes (admin pages are lazy-loaded)
   api/                             typed API client + types + fallback data
+  components/ui/                   design system: styles, Icon, FormField, Toast, ConfirmDialog
+  lib/                             theme, validation, formatting helpers
   sections/                        Hero, About, Skills, Projects, Experience, Education, Contact
-  pages/admin/                     login, layout, CRUD pages
+  pages/                           HomePage, NotFoundPage
+  pages/admin/                     login, sidebar layout, CRUD pages
 ```
 
 ## Deploying (notes)

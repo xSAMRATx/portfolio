@@ -1,9 +1,124 @@
-@import "tailwindcss";
+@import '@fontsource-variable/inter';
+@import 'tailwindcss';
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+/* Dark mode follows the `dark` class on <html> (set before first paint in app.blade.php). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ | Semantic colours. Components use these names (bg-page, bg-card, text-fg, text-muted, border-line, text-accent...)
+ | so one class works in both themes; only the variables below change.
+ */
+:root {
+  --page: oklch(0.985 0.003 247);
+  --card: oklch(1 0 0);
+  --card-2: oklch(0.965 0.006 247);
+  --fg: oklch(0.21 0.03 265);
+  --muted: oklch(0.44 0.03 257);
+  --subtle: oklch(0.53 0.025 257);
+  --line: oklch(0.9 0.01 255);
+  --accent: oklch(0.5 0.12 222);
+  --accent-strong: oklch(0.43 0.12 222);
+  --accent-soft: oklch(0.5 0.12 222 / 0.1);
+  --on-accent: oklch(1 0 0);
+  --danger: oklch(0.55 0.2 25);
+  --success: oklch(0.52 0.13 155);
+  --glow-1: oklch(0.8 0.12 215 / 0.22);
+  --glow-2: oklch(0.7 0.15 290 / 0.16);
+  color-scheme: light;
 }
 
-section[id] {
-  scroll-margin-top: 5rem;
+.dark {
+  --page: oklch(0.145 0.02 265);
+  --card: oklch(0.19 0.025 265);
+  --card-2: oklch(0.23 0.028 265);
+  --fg: oklch(0.96 0.005 250);
+  --muted: oklch(0.75 0.02 255);
+  --subtle: oklch(0.64 0.025 257);
+  --line: oklch(0.3 0.03 265);
+  --accent: oklch(0.8 0.13 210);
+  --accent-strong: oklch(0.87 0.11 205);
+  --accent-soft: oklch(0.8 0.13 210 / 0.12);
+  --on-accent: oklch(0.18 0.03 265);
+  --danger: oklch(0.72 0.17 20);
+  --success: oklch(0.78 0.15 155);
+  --glow-1: oklch(0.7 0.13 215 / 0.16);
+  --glow-2: oklch(0.6 0.18 290 / 0.14);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-glow-1: var(--glow-1);
+  --color-glow-2: var(--glow-2);
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-toast-in: toast-in 0.25s ease-out both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-page font-sans text-fg antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
+  /* One clear, consistent keyboard focus ring everywhere. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  dialog::backdrop {
+    @apply bg-black/50 backdrop-blur-sm;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
 }

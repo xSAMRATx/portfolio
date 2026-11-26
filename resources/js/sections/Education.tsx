@@ -1,32 +1,53 @@
 import type { Education as Edu } from '../api/types'
+import Reveal from '../components/Reveal'
 import Section from '../components/Section'
+import Icon from '../components/ui/Icon'
+
+function EducationCard({ item }: { item: Edu }) {
+  return (
+    <Reveal className="h-full">
+      <article className="flex h-full gap-4 rounded-2xl border border-line bg-card p-6 transition hover:border-accent/40">
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
+          <Icon name={item.type === 'degree' ? 'graduation' : 'star'} />
+        </span>
+        <div className="min-w-0">
+          <h4 className="font-semibold text-fg">{item.title}</h4>
+          <p className="mt-0.5 text-sm font-medium text-accent">{item.institution}</p>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-medium">
+            {item.period && <span className="rounded-md border border-line px-2 py-1 text-muted">{item.period}</span>}
+            {item.result && <span className="rounded-md bg-card-2 px-2 py-1 text-fg">{item.result}</span>}
+          </div>
+          {item.description && <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>}
+        </div>
+      </article>
+    </Reveal>
+  )
+}
 
 export default function Education({ items }: { items: Edu[] }) {
   if (items.length === 0) return null
-  const degrees = items.filter((i) => i.type === 'degree')
-  const trainings = items.filter((i) => i.type === 'training')
-
-  const card = (e: Edu) => (
-    <li key={e.id} className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <h3 className="text-lg font-semibold text-white">{e.title}</h3>
-        {e.period && <span className="font-mono text-sm text-slate-500">{e.period}</span>}
-      </div>
-      <p className="mt-1 text-cyan-400">{e.institution}</p>
-      {e.result && <p className="mt-3 inline-block rounded-md bg-slate-800 px-2.5 py-1 text-sm text-slate-300">{e.result}</p>}
-      {e.description && <p className="mt-3 text-sm leading-relaxed text-slate-400">{e.description}</p>}
-    </li>
-  )
+  const sorted = [...items].sort((a, b) => a.order - b.order)
+  const groups = [
+    { label: 'Degrees', items: sorted.filter((i) => i.type === 'degree') },
+    { label: 'Training & courses', items: sorted.filter((i) => i.type === 'training') },
+  ].filter((g) => g.items.length > 0)
 
   return (
     <Section id="education" eyebrow="Education" title="Education & training">
-      {degrees.length > 0 && <ul className="grid gap-6 md:grid-cols-2">{degrees.map(card)}</ul>}
-      {trainings.length > 0 && (
-        <>
-          <h3 className="mt-12 mb-6 text-sm font-semibold uppercase tracking-widest text-slate-500">Training</h3>
-          <ul className="grid gap-6 md:grid-cols-2">{trainings.map(card)}</ul>
-        </>
-      )}
+      <div className="space-y-12">
+        {groups.map((g) => (
+          <div key={g.label}>
+            <h3 className="mb-5 text-sm font-semibold text-subtle">{g.label}</h3>
+            <ul className="grid gap-5 md:grid-cols-2">
+              {g.items.map((item) => (
+                <li key={item.id}>
+                  <EducationCard item={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </Section>
   )
 }

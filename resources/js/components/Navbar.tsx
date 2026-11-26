@@ -1,78 +1,112 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useActiveSection } from '../hooks/useActiveSection'
+import { initials } from '../lib/format'
+import ThemeToggle from './ThemeToggle'
+import Icon from './ui/Icon'
+import { button } from './ui/styles'
 
-const links = [
-  { href: '#about', label: 'About' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#education', label: 'Education' },
-  { href: '#contact', label: 'Contact' },
-]
+export interface NavLinkItem {
+  id: string
+  label: string
+}
 
-export default function Navbar({ name }: { name: string }) {
+export default function Navbar({ name, links }: { name: string; links: NavLinkItem[] }) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const active = useActiveSection(links.map((l) => l.id))
+  const menuButton = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16)
+    const onScroll = () => setScrolled(window.scrollY > 8)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const initials = name
-    .replace(/[^A-Za-z ]/g, '')
-    .split(' ')
-    .filter(Boolean)
-    .slice(-2)
-    .map((w) => w[0])
-    .join('')
+  // Escape closes the mobile menu and returns focus to its button.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        menuButton.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  const linkClass = (id: string) =>
+    `relative rounded-lg px-3 py-2 text-sm font-medium transition ${
+      active === id ? 'text-accent' : 'text-muted hover:text-fg'
+    }`
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors ${
-        scrolled ? 'border-b border-slate-800 bg-slate-950/85 backdrop-blur' : 'bg-transparent'
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        scrolled || open ? 'border-b border-line bg-page/80 backdrop-blur-lg' : 'border-b border-transparent'
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="text-lg font-bold tracking-tight text-white">
-          <span className="text-cyan-400">{initials}</span>.dev
+      <a href="#main" className="sr-only rounded-lg bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:absolute focus:top-3 focus:left-3">
+        Skip to content
+      </a>
+      <nav aria-label="Main" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+        <a href="#top" className="flex items-center gap-2.5 font-bold tracking-tight text-fg" aria-label={`${name}, back to top`}>
+          <span className="grid size-9 place-items-center rounded-xl bg-accent text-sm text-on-accent">{initials(name)}</span>
+          <span className="hidden sm:inline">{name.replace(/^Md\.\s*/, '')}</span>
         </a>
-        <button
-          type="button"
-          className="rounded-md p-2 text-slate-300 hover:text-white md:hidden"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
-            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-          </svg>
-        </button>
-        <ul className="hidden items-center gap-8 md:flex">
+
+        <ul className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
-            <li key={l.href}>
-              <a href={l.href} className="text-sm font-medium text-slate-300 transition hover:text-cyan-400">
+            <li key={l.id}>
+              <a href={`#${l.id}`} className={linkClass(l.id)} aria-current={active === l.id ? 'true' : undefined}>
                 {l.label}
+                {active === l.id && <span className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-accent" />}
               </a>
             </li>
           ))}
         </ul>
+
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <span className="ml-2 hidden md:block">
+            <a href="#contact" className={button.primary}>
+              Contact me
+            </a>
+          </span>
+          <button
+            ref={menuButton}
+            type="button"
+            className={`${button.icon} md:hidden`}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((o) => !o)}
+          >
+            <Icon name={open ? 'close' : 'menu'} />
+          </button>
+        </div>
       </nav>
+
       {open && (
-        <ul className="space-y-1 border-t border-slate-800 bg-slate-950 px-6 py-4 md:hidden">
-          {links.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900 hover:text-cyan-400"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div id="mobile-menu" className="border-t border-line bg-page px-5 pt-3 pb-6 md:hidden">
+          <ul className="space-y-1">
+            {links.map((l) => (
+              <li key={l.id}>
+                <a
+                  href={`#${l.id}`}
+                  onClick={() => setOpen(false)}
+                  aria-current={active === l.id ? 'true' : undefined}
+                  className={`block rounded-xl px-4 py-3 text-base font-medium ${
+                    active === l.id ? 'bg-accent-soft text-accent' : 'text-fg hover:bg-card-2'
+                  }`}
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </header>
   )
