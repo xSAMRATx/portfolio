@@ -1,0 +1,12 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+| The React app (resources/js) handles every page itself: "/", "/admin", "/admin/projects"...
+| This catch-all returns the same Blade shell for all of them, so a page refresh or a deep link works.
+| Paths Laravel or the web server own (api, storage, uploads, build, up) are excluded and keep their own behaviour.
+*/
+Route::view('/{any?}', 'app')
+    ->where('any', '^(?!(?:api|storage|uploads|build)(?:/|$)|up$).*$')
+    ->name('spa');

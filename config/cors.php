@@ -19,7 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(array_map('trim', explode(',', (string) env('FRONTEND_URL', 'http://localhost:5173')))),
+    // The React app is served by this same Laravel app, so it needs no CORS.
+    // Only list extra origins here if another site must call the API (comma separated in .env).
+    'allowed_origins' => array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', '')))),
 
     'allowed_origins_patterns' => [],
 

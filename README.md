@@ -2,24 +2,22 @@
 
 Personal portfolio: a dark, responsive one-page site with an admin area.
 
-| Part | Stack | Folder |
-|------|-------|--------|
-| Frontend | React 19 + TypeScript + Tailwind CSS 4 (Vite) | [`frontend/`](frontend) |
-| Backend | PHP 8.2+ / Laravel 12 REST API + Sanctum token auth | [`backend/`](backend) |
+**One plain Laravel 12 project** (no starter kit). The React 19 + TypeScript + Tailwind CSS 4 app lives in
+`resources/js` and is served by Laravel through Vite (`laravel-vite-plugin`). The same app serves the REST API at `/api`,
+so there is no separate frontend, no CORS setup and no API URL to configure.
 
 **Site sections:** Hero · About · Skills · Projects · Experience · Education & training · Contact form · CV download
 **Admin (`/admin`):** login, edit profile, manage projects / skills / experience / education, upload CV, read contact messages.
 
 ---
 
-## 1. Backend (Laravel API)
+## Getting started
 
-Requirements: PHP 8.2+ (with `pdo_sqlite` or `pdo_mysql`), Composer.
+Requirements: PHP 8.2+ (with `pdo_sqlite` or `pdo_mysql`), Composer, Node 20.19+ or 22.12+.
 
 ```bash
-cd backend
 composer install
-cp .env.example .env
+cp .env.example .env            # Windows PowerShell: copy .env.example .env
 php artisan key:generate
 ```
 
@@ -27,9 +25,8 @@ Edit `.env`:
 
 ```dotenv
 APP_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:5173      # allowed CORS origin(s), comma separated
 ADMIN_EMAIL=you@example.com             # admin login
-ADMIN_PASSWORD=choose-a-strong-password # required, otherwise no admin user is seeded
+ADMIN_PASSWORD=choose-a-strong-password
 
 # SQLite is the default. For MySQL instead:
 # DB_CONNECTION=mysql
@@ -39,12 +36,37 @@ ADMIN_PASSWORD=choose-a-strong-password # required, otherwise no admin user is s
 ```
 
 ```bash
-touch database/database.sqlite   # only for SQLite
-php artisan migrate --seed
-php artisan serve                # http://localhost:8000
+php artisan migrate --seed      # SQLite: answer "yes" if it offers to create database/database.sqlite
+npm install
 ```
 
+Then run these two in **two terminals**:
+
+```bash
+php artisan serve               # http://localhost:8000  ← open this one
+npm run dev                     # Vite: hot reload for React + Tailwind
+```
+
+- Site: http://localhost:8000 · Admin: http://localhost:8000/admin (log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`)
+- Always open port **8000** (Laravel). Port 5173 is only Vite's asset server.
+- Shortcut: `composer run dev` starts the server, queue worker, logs and Vite together.
+
 Re-running `php artisan db:seed` resets the portfolio content to the seed data, and updates the admin password from `.env`.
+
+### Useful commands
+
+| Command | What it does |
+|---|---|
+| `npm run typecheck` | TypeScript check |
+| `npm run build` | production build into `public/build` (type-checks first) |
+| `php artisan test` | PHP feature tests |
+| `vendor/bin/pint` | PHP code style |
+
+If the API is down, the site still renders with built-in fallback content and shows a small notice.
+
+**Styling rule:** no inline `style` attributes — Tailwind classes only.
+
+---
 
 ### API
 
@@ -72,51 +94,47 @@ Admin (header `Authorization: Bearer <token>`):
 
 ### CV download
 
-Upload the PDF from **Admin → Profile → CV**. It is saved as `backend/public/uploads/cv.pdf` (git-ignored) and the
+Upload the PDF from **Admin → Profile → CV**. It is saved as `public/uploads/cv.pdf` (git-ignored) and the
 "Download CV" button appears in the hero. Use a public version of the CV without phone number or home address.
 
 Skills with an empty `level` are shown as tags; give a skill a 0–100 level to show it as a progress bar instead.
 
 ---
 
-## 2. Frontend (React + TS + Tailwind)
+## How it fits together
 
-Requirements: Node 20+.
-
-```bash
-cd frontend
-npm install
-cp .env.example .env     # VITE_API_URL=http://localhost:8000
-npm run dev              # http://localhost:5173
-```
-
-- Admin panel: http://localhost:5173/admin (log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`)
-- `npm run typecheck` — TypeScript check
-- `npm run build` — production build into `frontend/dist`
-
-If the API is down, the site still renders with built-in fallback content and shows a small notice.
-
-**Styling rule:** no inline `style` attributes — Tailwind classes only.
-
----
+- `routes/web.php` has one catch-all route that returns `resources/views/app.blade.php` for every page (`/`, `/admin`,
+  `/admin/projects`...). React Router then shows the right page, so refreshing or opening a deep link works.
+  `api/*`, `storage/*`, `uploads/*`, `build/*` and `/up` are excluded and keep their normal behaviour.
+- `app.blade.php` loads the app with `@viteReactRefresh` and `@vite([...])`: in development the files come from the Vite
+  dev server (hot reload), after `npm run build` from `public/build`.
+- The React API client calls `/api/...` on the same origin. Admin auth is a Sanctum bearer token (stored in the browser).
+- `config/cors.php` allows no other origins by default. Set `CORS_ALLOWED_ORIGINS` only if another site must call the API.
 
 ## Project structure
 
 ```
-backend/
-  app/Http/Controllers/Api/          public API (PortfolioController, ContactController)
-  app/Http/Controllers/Api/Admin/    admin API (Auth, Profile, Project, Skill, Experience, ContactMessage)
-  app/Http/Requests/                 Form Request validation
-  app/Http/Resources/                API Resources (JSON shape)
-  database/seeders/                  PortfolioSeeder (content), AdminUserSeeder
-  routes/api.php
-frontend/
-  src/api/            typed API client + types + fallback data
-  src/sections/       Hero, About, Skills, Projects, Experience, Contact
-  src/pages/admin/    login, layout, CRUD pages
+app/Http/Controllers/Api/          public API (PortfolioController, ContactController)
+app/Http/Controllers/Api/Admin/    admin API (Auth, Profile, Project, Skill, Experience, Education, ContactMessage)
+app/Http/Requests/                 Form Request validation
+app/Http/Resources/                API Resources (JSON shape)
+database/seeders/                  PortfolioSeeder (content), AdminUserSeeder
+routes/api.php                     API routes
+routes/web.php                     catch-all route for the React app
+resources/views/app.blade.php      the HTML shell
+resources/css/app.css              Tailwind entry
+resources/js/                      React app
+  main.tsx, App.tsx                entry + routes
+  api/                             typed API client + types + fallback data
+  sections/                        Hero, About, Skills, Projects, Experience, Education, Contact
+  pages/admin/                     login, layout, CRUD pages
 ```
 
 ## Deploying (notes)
 
-- Frontend: any static host (Vercel, Netlify, GitHub Pages). Set `VITE_API_URL` to the live API URL at build time. For client-side routes (`/admin`), configure an SPA fallback to `index.html`.
-- Backend: any PHP host / VPS. Set `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL`, and `FRONTEND_URL` to your live frontend domain.
+1. On the server: `composer install --no-dev --optimize-autoloader`, set `.env` (`APP_ENV=production`, `APP_DEBUG=false`,
+   `APP_URL`, database, `ADMIN_EMAIL` / `ADMIN_PASSWORD`), `php artisan key:generate`, `php artisan migrate --seed --force`.
+2. Build the assets: `npm ci && npm run build` (or build locally and upload `public/build`).
+3. Point the web server's document root at `public/`. `php artisan config:cache route:cache view:cache` for speed.
+
+One PHP host serves everything: pages, API, CV file and built assets.

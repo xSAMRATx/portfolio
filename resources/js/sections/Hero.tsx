@@ -1,8 +1,7 @@
 import type { Profile } from '../api/types'
-import { API_URL } from '../api/client'
 
 export default function Hero({ profile }: { profile: Profile }) {
-  const cvHref = profile.cv_url ? (profile.cv_url.startsWith('http') ? profile.cv_url : `${API_URL}${profile.cv_url}`) : null
+  const cvHref = profile.cv_url
 
   return (
     <section id="top" className="relative overflow-hidden">
