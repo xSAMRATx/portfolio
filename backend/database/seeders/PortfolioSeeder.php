@@ -64,7 +64,7 @@ class PortfolioSeeder extends Seeder
                 'title' => 'Front-end design collection',
                 'description' => 'A collection of front-end design builds: Amazon clone, YouTube clone, Google home page, parallax site, restaurant, university, music and landing pages.',
                 'tech_stack' => ['HTML', 'CSS'],
-                'repo' => 'PROJECT',
+                'repo' => null, // repo is private, so no public code link
                 'featured' => true,
             ],
             [
@@ -89,7 +89,7 @@ class PortfolioSeeder extends Seeder
                 'description' => $p['description'],
                 'tech_stack' => $p['tech_stack'],
                 'image' => null,
-                'github_url' => 'https://github.com/xSAMRATx/'.$p['repo'],
+                'github_url' => $p['repo'] ? 'https://github.com/xSAMRATx/'.$p['repo'] : null,
                 'live_url' => null,
                 'featured' => $p['featured'],
                 'order' => $i + 1,
