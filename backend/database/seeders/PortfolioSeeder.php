@@ -64,7 +64,7 @@ class PortfolioSeeder extends Seeder
                 'title' => 'Front-end design collection',
                 'description' => 'A collection of front-end design builds: Amazon clone, YouTube clone, Google home page, parallax site, restaurant, university, music and landing pages.',
                 'tech_stack' => ['HTML', 'CSS'],
-                'repo' => null, // repo is private, so no public code link
+                'repo' => 'PROJECT',
                 'featured' => true,
             ],
             [
