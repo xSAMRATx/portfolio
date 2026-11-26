@@ -1,12 +1,6 @@
 import type { Project } from '../api/types'
-import { API_URL } from '../api/client'
 import Section from '../components/Section'
 import Skeleton from '../components/Skeleton'
-
-function imageSrc(url: string | null): string | null {
-  if (!url) return null
-  return url.startsWith('http') ? url : `${API_URL}${url}`
-}
 
 export default function Projects({ projects, loading }: { projects: Project[]; loading: boolean }) {
   return (
@@ -20,7 +14,7 @@ export default function Projects({ projects, loading }: { projects: Project[]; l
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => {
-            const src = imageSrc(p.image_url)
+            const src = p.image_url
             return (
               <article key={p.id} className="group flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 transition hover:-translate-y-1 hover:border-cyan-500/50">
                 {src ? (

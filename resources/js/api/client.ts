@@ -15,7 +15,8 @@ import type {
   ValidationErrorBody,
 } from './types'
 
-export const API_URL: string = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000').replace(/\/$/, '')
+/** The API is served by this same Laravel app, so every request is same-origin: `/api/...`. */
+const API_BASE = '/api'
 
 const TOKEN_KEY = 'portfolio_admin_token'
 
@@ -46,7 +47,7 @@ async function request<T>(method: Method, path: string, body?: unknown, withAuth
     if (token) headers.Authorization = `Bearer ${token}`
   }
 
-  const res = await fetch(`${API_URL}/api${path}`, {
+  const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -91,7 +92,7 @@ async function uploadCv(file: File): Promise<Profile> {
   const body = new FormData()
   body.append('cv', file)
   const token = auth.getToken()
-  const res = await fetch(`${API_URL}/api/admin/profile/cv`, {
+  const res = await fetch(`${API_BASE}/admin/profile/cv`, {
     method: 'POST',
     headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body,
