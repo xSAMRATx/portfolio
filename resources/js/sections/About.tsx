@@ -1,45 +1,63 @@
 import type { Profile } from '../api/types'
+import Reveal from '../components/Reveal'
 import Section from '../components/Section'
-
-const socialLabels: Record<string, string> = { github: 'GitHub', linkedin: 'LinkedIn', twitter: 'X / Twitter', website: 'Website' }
+import Icon from '../components/ui/Icon'
+import { card } from '../components/ui/styles'
+import { socialItems } from '../lib/socials'
 
 export default function About({ profile }: { profile: Profile }) {
-  const socials = Object.entries(profile.social_links ?? {}).filter((e): e is [string, string] => Boolean(e[1]))
+  const socials = socialItems(profile.social_links)
+  const paragraphs = profile.bio.split('\n').filter((p) => p.trim() !== '')
 
   return (
     <Section id="about" eyebrow="About" title="A little about me">
-      <div className="grid gap-10 md:grid-cols-3">
-        <div className="space-y-4 text-lg leading-relaxed text-slate-400 md:col-span-2">
-          {profile.bio.split('\n').filter(Boolean).map((p, i) => (
+      <div className="grid gap-8 lg:grid-cols-3">
+        <Reveal className="space-y-5 text-lg leading-relaxed text-pretty text-muted lg:col-span-2">
+          {paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
-        </div>
-        <dl className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-          {profile.location && (
-            <div>
-              <dt className="text-xs uppercase tracking-wider text-slate-500">Location</dt>
-              <dd className="mt-1 text-slate-200">{profile.location}</dd>
+        </Reveal>
+        <Reveal>
+          <dl className={`${card} divide-y divide-line`}>
+            {profile.location && (
+              <div className="flex items-center gap-4 p-5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name="mapPin" /></span>
+                <div>
+                  <dt className="text-xs font-medium text-subtle">Location</dt>
+                  <dd className="font-medium text-fg">{profile.location}</dd>
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-4 p-5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent"><Icon name="mail" /></span>
+              <div className="min-w-0">
+                <dt className="text-xs font-medium text-subtle">Email</dt>
+                <dd className="truncate">
+                  <a href={`mailto:${profile.email}`} className="font-medium text-fg hover:text-accent">{profile.email}</a>
+                </dd>
+              </div>
             </div>
-          )}
-          <div>
-            <dt className="text-xs uppercase tracking-wider text-slate-500">Email</dt>
-            <dd className="mt-1 break-all">
-              <a href={`mailto:${profile.email}`} className="text-cyan-400 hover:underline">{profile.email}</a>
-            </dd>
-          </div>
-          {socials.length > 0 && (
-            <div>
-              <dt className="text-xs uppercase tracking-wider text-slate-500">Find me on</dt>
-              <dd className="mt-2 flex flex-wrap gap-2">
-                {socials.map(([key, url]) => (
-                  <a key={key} href={url} target="_blank" rel="noreferrer" className="rounded-md border border-slate-700 px-3 py-1 text-sm text-slate-300 hover:border-cyan-400 hover:text-cyan-400">
-                    {socialLabels[key] ?? key}
-                  </a>
-                ))}
-              </dd>
-            </div>
-          )}
-        </dl>
+            {socials.length > 0 && (
+              <div className="p-5">
+                <dt className="text-xs font-medium text-subtle">Find me on</dt>
+                <dd className="mt-3 flex flex-wrap gap-2">
+                  {socials.map((s) => (
+                    <a
+                      key={s.key}
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-medium text-fg transition hover:border-accent hover:text-accent"
+                    >
+                      <Icon name={s.icon} className="size-4" />
+                      {s.label}
+                    </a>
+                  ))}
+                </dd>
+              </div>
+            )}
+          </dl>
+        </Reveal>
       </div>
     </Section>
   )

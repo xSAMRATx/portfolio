@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SpaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -7,6 +8,6 @@ use Illuminate\Support\Facades\Route;
 | This catch-all returns the same Blade shell for all of them, so a page refresh or a deep link works.
 | Paths Laravel or the web server own (api, storage, uploads, build, up) are excluded and keep their own behaviour.
 */
-Route::view('/{any?}', 'app')
+Route::get('/{any?}', SpaController::class)
     ->where('any', '^(?!(?:api|storage|uploads|build)(?:/|$)|up$).*$')
     ->name('spa');
