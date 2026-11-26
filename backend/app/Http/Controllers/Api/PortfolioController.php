@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\EducationResource;
 use App\Http\Resources\ExperienceResource;
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\SkillResource;
+use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Profile;
 use App\Models\Project;
@@ -22,7 +24,7 @@ class PortfolioController extends Controller
 
     public function skills(): AnonymousResourceCollection
     {
-        return SkillResource::collection(Skill::orderByDesc('level')->orderBy('name')->get());
+        return SkillResource::collection(Skill::orderBy('id')->get());
     }
 
     public function projects(): AnonymousResourceCollection
@@ -33,5 +35,10 @@ class PortfolioController extends Controller
     public function experiences(): AnonymousResourceCollection
     {
         return ExperienceResource::collection(Experience::latestFirst()->get());
+    }
+
+    public function educations(): AnonymousResourceCollection
+    {
+        return EducationResource::collection(Education::orderBy('order')->get());
     }
 }

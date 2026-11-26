@@ -1,6 +1,8 @@
 import type {
   ContactMessage,
   ContactPayload,
+  Education,
+  EducationInput,
   Experience,
   ExperienceInput,
   LoginResponse,
@@ -72,6 +74,7 @@ export const publicApi = {
   skills: () => unwrap(request<Wrapped<Skill[]>>('GET', '/skills')),
   projects: () => unwrap(request<Wrapped<Project[]>>('GET', '/projects')),
   experiences: () => unwrap(request<Wrapped<Experience[]>>('GET', '/experiences')),
+  educations: () => unwrap(request<Wrapped<Education[]>>('GET', '/educations')),
   contact: (payload: ContactPayload) => request<{ message: string }>('POST', '/contact', payload),
 }
 
@@ -84,6 +87,20 @@ function crud<T, I>(resource: string) {
   }
 }
 
+async function uploadCv(file: File): Promise<Profile> {
+  const body = new FormData()
+  body.append('cv', file)
+  const token = auth.getToken()
+  const res = await fetch(`${API_URL}/api/admin/profile/cv`, {
+    method: 'POST',
+    headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body,
+  })
+  const data: unknown = await res.json().catch(() => null)
+  if (!res.ok) throw new ApiError(res.status, data as ValidationErrorBody | null)
+  return (data as Wrapped<Profile>).data
+}
+
 /** Admin endpoints (Sanctum bearer token) */
 export const adminApi = {
   login: (email: string, password: string) => request<LoginResponse>('POST', '/admin/login', { email, password }),
@@ -92,10 +109,13 @@ export const adminApi = {
   profile: {
     get: () => unwrap(request<Wrapped<Profile>>('GET', '/admin/profile', undefined, true)),
     update: (input: ProfileInput) => unwrap(request<Wrapped<Profile>>('PUT', '/admin/profile', input, true)),
+    uploadCv: (file: File) => uploadCv(file),
+    removeCv: () => unwrap(request<Wrapped<Profile>>('DELETE', '/admin/profile/cv', undefined, true)),
   },
   projects: crud<Project, ProjectInput>('projects'),
   skills: crud<Skill, SkillInput>('skills'),
   experiences: crud<Experience, ExperienceInput>('experiences'),
+  educations: crud<Education, EducationInput>('educations'),
   messages: {
     list: () => unwrap(request<Wrapped<ContactMessage[]>>('GET', '/admin/messages', undefined, true)),
     markRead: (id: number) => unwrap(request<Wrapped<ContactMessage>>('PATCH', `/admin/messages/${id}/read`, undefined, true)),

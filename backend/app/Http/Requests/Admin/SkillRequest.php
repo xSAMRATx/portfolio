@@ -18,7 +18,7 @@ class SkillRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:100'],
             'category' => ['required', Rule::in(Skill::CATEGORIES)],
-            'level' => ['required', 'integer', 'between:0,100'],
+            'level' => ['nullable', 'integer', 'between:0,100'],
         ];
     }
 }

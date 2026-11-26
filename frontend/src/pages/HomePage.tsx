@@ -1,10 +1,11 @@
 import { publicApi } from '../api/client'
-import { fallbackExperiences, fallbackProfile, fallbackProjects, fallbackSkills } from '../api/fallback'
+import { fallbackEducations, fallbackExperiences, fallbackProfile, fallbackProjects, fallbackSkills } from '../api/fallback'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import { useApi } from '../hooks/useApi'
 import About from '../sections/About'
 import Contact from '../sections/Contact'
+import Education from '../sections/Education'
 import Experience from '../sections/Experience'
 import Hero from '../sections/Hero'
 import Projects from '../sections/Projects'
@@ -15,8 +16,9 @@ export default function HomePage() {
   const skills = useApi(publicApi.skills, fallbackSkills)
   const projects = useApi(publicApi.projects, fallbackProjects)
   const experiences = useApi(publicApi.experiences, fallbackExperiences)
+  const educations = useApi(publicApi.educations, fallbackEducations)
 
-  const offline = [profile, skills, projects, experiences].some((s) => s.error)
+  const offline = [profile, skills, projects, experiences, educations].some((s) => s.error)
 
   return (
     <>
@@ -32,6 +34,7 @@ export default function HomePage() {
         <Skills skills={skills.data} loading={skills.loading} />
         <Projects projects={projects.data} loading={projects.loading} />
         <Experience experiences={experiences.data} loading={experiences.loading} />
+        <Education items={educations.data} />
         <Contact email={profile.data.email} />
       </main>
       <Footer name={profile.data.name} />

@@ -1,7 +1,7 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { adminApi, ApiError } from '../../api/client'
 import type { ProfileInput } from '../../api/types'
-import { btnPrimary, input } from './ui'
+import { btnDanger, btnPrimary, input } from './ui'
 
 const socialKeys = ['github', 'linkedin', 'twitter', 'website'] as const
 
@@ -18,6 +18,29 @@ export default function AdminProfile() {
 
   const set = <K extends keyof ProfileInput>(k: K, v: ProfileInput[K]) => setForm((f) => (f ? { ...f, [k]: v } : f))
   const err = (k: string) => errors[k]?.[0] && <span className="block text-sm text-rose-400">{errors[k][0]}</span>
+
+  const onCvChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setErrors({})
+    try {
+      const p = await adminApi.profile.uploadCv(file)
+      set('cv_path', p.cv_url)
+      setNotice('CV uploaded')
+    } catch (ex) {
+      if (ex instanceof ApiError) {
+        setErrors(ex.errors)
+        setNotice(ex.message)
+      }
+    }
+    e.target.value = ''
+  }
+
+  const onCvRemove = async () => {
+    await adminApi.profile.removeCv()
+    set('cv_path', null)
+    setNotice('CV removed')
+  }
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -49,8 +72,23 @@ export default function AdminProfile() {
         <label className="block space-y-1"><span className="text-sm text-slate-300">Location</span>
           <input className={input} value={form.location ?? ''} onChange={(e) => set('location', e.target.value || null)} /></label>
       </div>
-      <label className="block space-y-1"><span className="text-sm text-slate-300">CV path or URL (e.g. /storage/cv.pdf)</span>
-        <input className={input} value={form.cv_path ?? ''} onChange={(e) => set('cv_path', e.target.value || null)} />{err('cv_path')}</label>
+      <div className="space-y-2 rounded-xl border border-slate-800 p-4">
+        <p className="text-sm font-medium text-slate-300">CV (PDF, max 5 MB)</p>
+        {form.cv_path ? (
+          <p className="text-sm text-slate-400">
+            Current: <a href={form.cv_path} target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">{form.cv_path}</a>
+          </p>
+        ) : (
+          <p className="text-sm text-slate-500">No CV uploaded — the "Download CV" button is hidden.</p>
+        )}
+        <div className="flex flex-wrap items-center gap-3">
+          <input type="file" accept="application/pdf" onChange={onCvChange}
+            className="text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:py-2 file:text-slate-200 hover:file:bg-slate-700" />
+          {form.cv_path && <button type="button" className={btnDanger} onClick={onCvRemove}>Remove CV</button>}
+        </div>
+        {err('cv')}
+        <p className="text-xs text-slate-500">Tip: use a public version of your CV without phone number or home address.</p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         {socialKeys.map((k) => (
           <label key={k} className="block space-y-1"><span className="text-sm capitalize text-slate-300">{k}</span>

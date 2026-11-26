@@ -1,4 +1,4 @@
-# Portfolio — MD. ABDUL AZIZ SAMRAT
+# Portfolio — Md. Abdul Aziz Samrat
 
 Personal portfolio: a dark, responsive one-page site with an admin area.
 
@@ -7,8 +7,8 @@ Personal portfolio: a dark, responsive one-page site with an admin area.
 | Frontend | React 19 + TypeScript + Tailwind CSS 4 (Vite) | [`frontend/`](frontend) |
 | Backend | PHP 8.2+ / Laravel 12 REST API + Sanctum token auth | [`backend/`](backend) |
 
-**Site sections:** Hero · About · Skills · Projects · Experience · Contact form · CV download
-**Admin (`/admin`):** login, edit profile, manage projects / skills / experience, read contact messages.
+**Site sections:** Hero · About · Skills · Projects · Experience · Education & training · Contact form · CV download
+**Admin (`/admin`):** login, edit profile, manage projects / skills / experience / education, upload CV, read contact messages.
 
 ---
 
@@ -56,6 +56,7 @@ Public:
 | GET | `/api/skills` | |
 | GET | `/api/projects` | featured first, then `order` |
 | GET | `/api/experiences` | current role first |
+| GET | `/api/educations` | degrees and trainings |
 | POST | `/api/contact` | `name, email, subject?, message` — validated, 5/min per IP |
 
 Admin (header `Authorization: Bearer <token>`):
@@ -65,13 +66,16 @@ Admin (header `Authorization: Bearer <token>`):
 | POST | `/api/admin/login` → `{ token, user }` (10/min) |
 | GET | `/api/admin/me` · POST `/api/admin/logout` |
 | GET / PUT | `/api/admin/profile` |
-| CRUD | `/api/admin/projects`, `/api/admin/skills`, `/api/admin/experiences` |
+| POST / DELETE | `/api/admin/profile/cv` (multipart field `cv`, PDF ≤ 5 MB) |
+| CRUD | `/api/admin/projects`, `/api/admin/skills`, `/api/admin/experiences`, `/api/admin/educations` |
 | GET | `/api/admin/messages` · PATCH `/api/admin/messages/{id}/read` · DELETE `/api/admin/messages/{id}` |
 
 ### CV download
 
-Put your PDF in `backend/public/` (e.g. `backend/public/cv.pdf`), then in **Admin → Profile** set *CV path* to `/cv.pdf`.
-The "Download CV" button appears in the hero once a CV is set. A full URL (e.g. Google Drive) also works.
+Upload the PDF from **Admin → Profile → CV**. It is saved as `backend/public/uploads/cv.pdf` (git-ignored) and the
+"Download CV" button appears in the hero. Use a public version of the CV without phone number or home address.
+
+Skills with an empty `level` are shown as tags; give a skill a 0–100 level to show it as a progress bar instead.
 
 ---
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Profile;
 use App\Models\Project;
@@ -14,34 +15,33 @@ class PortfolioSeeder extends Seeder
     {
         Profile::query()->delete();
         Profile::create([
-            'name' => 'MD. ABDUL AZIZ SAMRAT',
-            'title' => 'Full-Stack Developer (Laravel & JavaScript)',
-            'bio' => "I build web applications with Laravel on the backend and modern JavaScript frameworks on the frontend.\n"
-                .'This is placeholder text — update it from the admin panel (Profile).',
-            'email' => 'you@example.com', // placeholder: change in admin → Profile
-            'location' => 'Bangladesh',
+            'name' => 'Md. Abdul Aziz Samrat',
+            'title' => 'Software Engineer · PHP & Laravel Developer',
+            'bio' => 'PHP & Laravel developer building scalable web applications across e-commerce, ERP, HRM and CRM. '
+                .'I work on RESTful APIs, payment and SMS gateway integrations, MySQL optimisation and production servers, '
+                .'with React, Vue and Tailwind on the front end.',
+            'email' => 'mdabdulazizsamrat@gmail.com',
+            'location' => 'Dhaka, Bangladesh',
             'social_links' => [
                 'github' => 'https://github.com/xSAMRATx',
                 'linkedin' => null,
                 'twitter' => null,
                 'website' => null,
             ],
-            'cv_path' => null, // e.g. put cv.pdf in public/ and set this to /cv.pdf
+            'cv_path' => null, // upload the CV PDF from Admin → Profile
         ]);
 
         Skill::query()->delete();
-        foreach ([
-            ['PHP', 'backend', 90],
-            ['Laravel', 'backend', 90],
-            ['MySQL', 'database', 80],
-            ['Vue / Nuxt', 'frontend', 85],
-            ['React', 'frontend', 75],
-            ['TypeScript', 'frontend', 70],
-            ['Tailwind CSS', 'frontend', 80],
-            ['Bootstrap', 'frontend', 85],
-            ['Git', 'tools', 85],
-        ] as [$name, $category, $level]) {
-            Skill::create(compact('name', 'category', 'level'));
+        $skills = [
+            'languages' => ['HTML5', 'CSS3', 'JavaScript (ES6+)', 'TypeScript', 'PHP', 'SQL'],
+            'frameworks' => ['Laravel', 'React.js', 'Vue.js / Nuxt', 'Tailwind CSS', 'Bootstrap', 'Inertia.js'],
+            'backend' => ['REST APIs', 'Eloquent / Query Builder', 'MySQL'],
+            'tools' => ['Git / GitHub', 'Composer', 'Nginx', 'Postman', 'Linux server management', 'cPanel'],
+        ];
+        foreach ($skills as $category => $names) {
+            foreach ($names as $name) {
+                Skill::create(['name' => $name, 'category' => $category, 'level' => null]);
+            }
         }
 
         Project::query()->delete();
@@ -96,21 +96,56 @@ class PortfolioSeeder extends Seeder
             ]);
         }
 
-        // Placeholder experience — replace with real roles from the CV via admin → Experience.
         Experience::query()->delete();
-        Experience::create([
-            'company' => 'Your Company (placeholder)',
-            'role' => 'Full-Stack Developer',
-            'start_date' => '2024-01-01',
-            'end_date' => null,
-            'description' => 'Placeholder — describe your current role, the stack you use and what you build.',
-        ]);
-        Experience::create([
-            'company' => 'Previous Company (placeholder)',
-            'role' => 'Junior Web Developer',
-            'start_date' => '2022-01-01',
-            'end_date' => '2023-12-31',
-            'description' => 'Placeholder — describe your earlier role.',
-        ]);
+        $experiences = [
+            [
+                'company' => 'CSN Bangladesh Ltd',
+                'role' => 'Software Engineer',
+                'start_date' => '2026-06-10',
+                'end_date' => null,
+                'description' => 'Building travel-tech products with Laravel and Nuxt, including wholesaler promotional-deal syncing '
+                    .'and automated Facebook Page posting through the Meta Graph API.',
+            ],
+            [
+                'company' => '6amTech',
+                'role' => 'Software Engineer (PHP & Laravel Developer)',
+                'start_date' => '2025-08-01',
+                'end_date' => '2026-03-31',
+                'description' => "Developed and maintained e-commerce products and client customisations.\n"
+                    ."Built and maintained REST APIs for Flutter apps, tested with Postman.\n"
+                    ."Integrated payment and SMS gateways.\n"
+                    .'Managed server environments for stability and uptime.',
+            ],
+            [
+                'company' => 'CodeCloud Technology',
+                'role' => 'PHP & Laravel Developer',
+                'start_date' => '2024-05-01',
+                'end_date' => '2025-04-30',
+                'description' => "Built ERP, CRM and HRM modules.\n"
+                    ."Led payroll, attendance, leave and employee management features.\n"
+                    ."Improved performance with advanced Laravel patterns.\n"
+                    .'Worked with international clients via Fiverr and Upwork.',
+            ],
+            [
+                'company' => 'CodeCloud Technology',
+                'role' => 'Junior Laravel Developer (Internship)',
+                'start_date' => '2024-02-01',
+                'end_date' => '2024-05-31',
+                'description' => 'Assisted on HRM and e-commerce platforms: database design, authentication and feature implementation.',
+            ],
+        ];
+        foreach ($experiences as $e) {
+            Experience::create($e);
+        }
+
+        Education::query()->delete();
+        $educations = [
+            ['degree', 'M.Sc. in Computer Science', 'Jahangirnagar University', '2023', 'CGPA 3.90', null],
+            ['degree', 'B.Sc. in Computer Science & Engineering', 'Dhaka City College (National University)', '2021', 'CGPA 3.27', null],
+            ['training', 'Web Development – PHP with Laravel', 'PONDIT (BASIS & SEIP)', 'Jun – Sep 2023', 'Awarded Top Trainee', null],
+        ];
+        foreach ($educations as $i => [$type, $title, $institution, $period, $result, $description]) {
+            Education::create(compact('type', 'title', 'institution', 'period', 'result', 'description') + ['order' => $i + 1]);
+        }
     }
 }

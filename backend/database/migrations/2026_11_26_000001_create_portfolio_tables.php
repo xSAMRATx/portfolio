@@ -24,7 +24,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('category')->default('other');
-            $table->unsignedTinyInteger('level')->default(80);
+            $table->unsignedTinyInteger('level')->nullable();
             $table->timestamps();
         });
 
@@ -51,6 +51,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('educations', function (Blueprint $table) {
+            $table->id();
+            $table->string('type')->default('degree'); // degree | training
+            $table->string('title');
+            $table->string('institution');
+            $table->string('period')->nullable();
+            $table->string('result')->nullable();
+            $table->text('description')->nullable();
+            $table->unsignedInteger('order')->default(0);
+            $table->timestamps();
+        });
+
         Schema::create('contact_messages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -66,6 +78,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('contact_messages');
+        Schema::dropIfExists('educations');
         Schema::dropIfExists('experiences');
         Schema::dropIfExists('projects');
         Schema::dropIfExists('skills');

@@ -8,6 +8,7 @@ const nav = [
   { to: 'projects', label: 'Projects' },
   { to: 'skills', label: 'Skills' },
   { to: 'experiences', label: 'Experience' },
+  { to: 'educations', label: 'Education' },
   { to: 'messages', label: 'Messages' },
 ]
 

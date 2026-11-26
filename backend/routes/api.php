@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\ContactMessageController;
+use App\Http\Controllers\Api\Admin\EducationController;
 use App\Http\Controllers\Api\Admin\ExperienceController;
 use App\Http\Controllers\Api\Admin\ProfileController;
 use App\Http\Controllers\Api\Admin\ProjectController;
@@ -15,6 +16,7 @@ Route::get('/profile', [PortfolioController::class, 'profile']);
 Route::get('/skills', [PortfolioController::class, 'skills']);
 Route::get('/projects', [PortfolioController::class, 'projects']);
 Route::get('/experiences', [PortfolioController::class, 'experiences']);
+Route::get('/educations', [PortfolioController::class, 'educations']);
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:contact');
 
 // Admin API (Sanctum bearer tokens)
@@ -27,10 +29,13 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::put('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/cv', [ProfileController::class, 'uploadCv']);
+        Route::delete('/profile/cv', [ProfileController::class, 'removeCv']);
 
         Route::apiResource('skills', SkillController::class)->parameters(['skills' => 'model']);
         Route::apiResource('projects', ProjectController::class)->parameters(['projects' => 'model']);
         Route::apiResource('experiences', ExperienceController::class)->parameters(['experiences' => 'model']);
+        Route::apiResource('educations', EducationController::class)->parameters(['educations' => 'model']);
 
         Route::get('/messages', [ContactMessageController::class, 'index']);
         Route::patch('/messages/{message}/read', [ContactMessageController::class, 'markRead']);

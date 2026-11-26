@@ -109,7 +109,7 @@ export default function CrudManager<T extends { id: number }, F extends Record<s
           </select>
         )
       case 'number':
-        return <input type="number" className={input} value={Number(value ?? 0)} onChange={(e) => set(f.name, Number(e.target.value))} />
+        return <input type="number" className={input} value={value === null || value === undefined ? '' : Number(value)} onChange={(e) => set(f.name, e.target.value === '' ? null : Number(e.target.value))} />
       case 'tags':
         return (
           <input

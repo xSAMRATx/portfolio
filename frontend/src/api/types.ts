@@ -17,13 +17,13 @@ export interface Profile {
   cv_url: string | null
 }
 
-export type SkillCategory = 'backend' | 'frontend' | 'database' | 'tools' | 'other'
+export type SkillCategory = 'languages' | 'frameworks' | 'backend' | 'tools' | 'other'
 
 export interface Skill {
   id: number
   name: string
   category: SkillCategory
-  level: number
+  level: number | null
 }
 
 export interface Project {
@@ -46,6 +46,19 @@ export interface Experience {
   end_date: string | null
   is_current: boolean
   description: string | null
+}
+
+export type EducationType = 'degree' | 'training'
+
+export interface Education {
+  id: number
+  type: EducationType
+  title: string
+  institution: string
+  period: string | null
+  result: string | null
+  description: string | null
+  order: number
 }
 
 export interface ContactMessage {
@@ -73,6 +86,7 @@ export interface LoginResponse {
 export type ProjectInput = Omit<Project, 'id' | 'image_url'> & { image_url?: string | null }
 export type SkillInput = Omit<Skill, 'id'>
 export type ExperienceInput = Omit<Experience, 'id' | 'is_current'>
+export type EducationInput = Omit<Education, 'id'>
 export type ProfileInput = Omit<Profile, 'id' | 'cv_url'> & { cv_path?: string | null }
 
 export interface ValidationErrorBody {
