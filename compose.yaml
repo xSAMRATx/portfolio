@@ -1,0 +1,96 @@
+# =============================================================================
+#  Docker setup for the portfolio (OPTIONAL — the normal setup in README.md
+#  still works without Docker).
+#
+#  One command starts everything:   docker compose up -d --build
+#  Beginner guide:                  docs/DOCKER.md
+#
+#  4 services (= 4 containers) work together:
+#
+#    browser ──► web (nginx :8000) ──► app (PHP-FPM / Laravel) ──► db (MySQL)
+#    browser ──► frontend (Vite dev server :5173)
+#
+#  Containers find each other by SERVICE NAME. That's why Laravel uses
+#  DB_HOST=db (not 127.0.0.1) and nginx talks to "app:9000".
+# =============================================================================
+
+name: portfolio
+
+services:
+  # ---------------------------------------------------------------------------
+  # app: PHP-FPM runs the Laravel code. It does NOT serve HTTP itself;
+  # nginx (below) sends PHP requests to it on port 9000.
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: ./docker/php          # only this folder is sent to the builder
+      args:
+        # Run as YOUR user id, so files Laravel creates (logs, cache, vendor/)
+        # belong to you on your computer, not to root. See docs/DOCKER.md.
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    volumes:
+      # "bind mount": your backend/ folder appears inside the container.
+      # Edit code on your computer -> the container sees it instantly.
+      - ./backend:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy   # wait until MySQL really accepts connections
+
+  # ---------------------------------------------------------------------------
+  # web: nginx receives HTTP requests. Static files (public/uploads/cv.pdf …)
+  # it serves directly; everything else goes to Laravel via the app service.
+  # ---------------------------------------------------------------------------
+  web:
+    image: nginx:1.30-alpine
+    ports:
+      - "8000:80"                    # your computer :8000  ->  container :80
+    volumes:
+      - ./backend:/var/www/html:ro   # read-only: nginx only needs to read files
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  # ---------------------------------------------------------------------------
+  # db: MySQL. Data lives in the named volume "db-data", so it survives
+  # `docker compose down`. Only `docker compose down -v` deletes it.
+  # ---------------------------------------------------------------------------
+  db:
+    image: mysql:9.7
+    environment:
+      # Local development values only. They must match DB_* in backend/.env.
+      MYSQL_DATABASE: portfolio
+      MYSQL_USER: portfolio
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root-secret
+    ports:
+      - "3307:3306"                  # 3307 on your computer (for TablePlus/DBeaver),
+                                     # so it never clashes with a local MySQL on 3306
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot-secret"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # ---------------------------------------------------------------------------
+  # frontend: Node runs the Vite dev server for the React app.
+  # No Dockerfile needed: we use the official Node image as-is.
+  # ---------------------------------------------------------------------------
+  frontend:
+    image: node:26-slim
+    working_dir: /app
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      HOME: /tmp                     # npm needs a writable home folder
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    # Install packages (fast when nothing changed), then start Vite.
+    # --host 0.0.0.0 lets your browser reach Vite from outside the container.
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  db-data:

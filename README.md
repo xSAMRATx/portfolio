@@ -100,9 +100,25 @@ If the API is down, the site still renders with built-in fallback content and sh
 
 ---
 
+## 3. Optional: run with Docker (for learning)
+
+The normal way to work on this project is the setup above (`php artisan serve` + `npm run dev`).
+Docker is an extra, optional way to run the same app (PHP 8.5, nginx, MySQL, Node in containers),
+mainly for learning Docker. It doesn't change any of the settings above.
+
+```bash
+docker compose up -d --build
+```
+
+Step-by-step beginner guide: **[docs/DOCKER.md](docs/DOCKER.md)**
+
+---
+
 ## Project structure
 
 ```
+compose.yaml          optional Docker setup (see docs/DOCKER.md)
+docker/               Dockerfile + nginx/PHP config for Docker
 backend/
   app/Http/Controllers/Api/          public API (PortfolioController, ContactController)
   app/Http/Controllers/Api/Admin/    admin API (Auth, Profile, Project, Skill, Experience, ContactMessage)

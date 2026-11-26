@@ -1,0 +1,2 @@
+# Optional Docker settings (HOST_UID / HOST_GID), see docs/DOCKER.md
+/.env
