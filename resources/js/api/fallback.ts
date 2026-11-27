@@ -8,7 +8,7 @@ export const fallbackProfile: Profile = {
   bio: 'PHP & Laravel developer building scalable web applications across e-commerce, ERP, HRM and CRM. I work on RESTful APIs, payment and SMS gateway integrations, MySQL optimisation and production servers, with React, Vue and Tailwind on the front end.',
   email: 'mdabdulazizsamrat@gmail.com',
   location: 'Dhaka, Bangladesh',
-  social_links: { github: 'https://github.com/xSAMRATx', linkedin: null, twitter: null, website: null },
+  social_links: { github: 'https://github.com/xSAMRATx', linkedin: 'https://www.linkedin.com/in/md-abdul-aziz-samrat-797738206/', twitter: null, website: null },
   cv_url: null,
 }
 
