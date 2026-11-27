@@ -24,7 +24,7 @@ class PortfolioSeeder extends Seeder
             'location' => 'Dhaka, Bangladesh',
             'social_links' => [
                 'github' => 'https://github.com/xSAMRATx',
-                'linkedin' => null,
+                'linkedin' => 'https://www.linkedin.com/in/md-abdul-aziz-samrat-797738206/',
                 'twitter' => null,
                 'website' => null,
             ],
@@ -109,8 +109,8 @@ class PortfolioSeeder extends Seeder
             [
                 'company' => '6amTech',
                 'role' => 'Software Engineer (PHP & Laravel Developer)',
-                'start_date' => '2025-08-01',
-                'end_date' => '2026-03-31',
+                'start_date' => '2025-07-01',
+                'end_date' => '2026-04-30',
                 'description' => "Developed and maintained e-commerce products and client customisations.\n"
                     ."Built and maintained REST APIs for Flutter apps, tested with Postman.\n"
                     ."Integrated payment and SMS gateways.\n"
