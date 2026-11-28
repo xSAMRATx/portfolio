@@ -24,7 +24,7 @@ class PortfolioSeeder extends Seeder
             'location' => 'Dhaka, Bangladesh',
             'social_links' => [
                 'github' => 'https://github.com/xSAMRATx',
-                'linkedin' => 'https://www.linkedin.com/in/md-abdul-aziz-samrat-797738206/',
+                'linkedin' => 'https://www.linkedin.com/in/aziz-samrat',
                 'twitter' => null,
                 'website' => null,
             ],
