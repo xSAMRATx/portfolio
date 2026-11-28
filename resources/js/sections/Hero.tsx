@@ -9,7 +9,9 @@ interface Stat {
 }
 
 export default function Hero({ profile, current, stats }: { profile: Profile; current: Experience | null; stats: Stat[] }) {
-  const github = socialItems(profile.social_links).find((s) => s.key === 'github')
+  const socials = socialItems(profile.social_links)
+  const github = socials.find((s) => s.key === 'github')
+  const linkedin = socials.find((s) => s.key === 'linkedin')
 
   return (
     <section id="top" className="relative isolate overflow-hidden">
@@ -64,6 +66,12 @@ export default function Hero({ profile, current, stats }: { profile: Profile; cu
               <a href={github.url} target="_blank" rel="noreferrer" className={`${button.secondary} ${button.large}`}>
                 <Icon name="github" className="size-5" />
                 GitHub
+              </a>
+            )}
+            {linkedin && (
+              <a href={linkedin.url} target="_blank" rel="noreferrer" className={`${button.secondary} ${button.large}`}>
+                <Icon name="linkedin" className="size-5" />
+                LinkedIn
               </a>
             )}
           </div>

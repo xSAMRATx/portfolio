@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:static": "tsc && vite build --config vite.static.config.ts",
+    "preview:static": "vite preview --config vite.static.config.ts",
     "typecheck": "tsc"
   },
   "dependencies": {

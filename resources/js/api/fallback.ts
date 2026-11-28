@@ -1,28 +1,14 @@
+import content from '../content/portfolio.json'
 import type { Education, Experience, Profile, Project, Skill } from './types'
 
-// Shown when the API is unreachable, so the page never renders empty.
-export const fallbackProfile: Profile = {
-  id: 0,
-  name: 'Md. Abdul Aziz Samrat',
-  title: 'Software Engineer · PHP & Laravel Developer',
-  bio: 'PHP & Laravel developer building scalable web applications across e-commerce, ERP, HRM and CRM. I work on RESTful APIs, payment and SMS gateway integrations, MySQL optimisation and production servers, with React, Vue and Tailwind on the front end.',
-  email: 'mdabdulazizsamrat@gmail.com',
-  location: 'Dhaka, Bangladesh',
-  social_links: { github: 'https://github.com/xSAMRATx', linkedin: 'https://www.linkedin.com/in/md-abdul-aziz-samrat-797738206/', twitter: null, website: null },
-  cv_url: null,
-}
-
-let id = 0
-const group = (category: Skill['category'], names: string[]): Skill[] =>
-  names.map((name) => ({ id: ++id, name, category, level: null }))
-
-export const fallbackSkills: Skill[] = [
-  ...group('languages', ['HTML5', 'CSS3', 'JavaScript (ES6+)', 'TypeScript', 'PHP', 'SQL']),
-  ...group('frameworks', ['Laravel', 'React.js', 'Vue.js / Nuxt', 'Tailwind CSS', 'Bootstrap', 'Inertia.js']),
-  ...group('backend', ['REST APIs', 'Eloquent / Query Builder', 'MySQL']),
-  ...group('tools', ['Git / GitHub', 'Composer', 'Nginx', 'Postman', 'Linux server management', 'cPanel']),
-]
-
-export const fallbackProjects: Project[] = []
-export const fallbackExperiences: Experience[] = []
-export const fallbackEducations: Education[] = []
+/*
+ | Built-in copy of the portfolio content.
+ | - Laravel site: shown only when the API can't be reached, so the page never renders empty.
+ | - Static site (GitHub Pages): the whole page is built from it.
+ | It must match database/seeders/PortfolioSeeder.php — tests/Feature/StaticContentTest.php fails when they drift.
+ */
+export const fallbackProfile = content.profile as Profile
+export const fallbackSkills = content.skills as Skill[]
+export const fallbackProjects = content.projects as Project[]
+export const fallbackExperiences = content.experiences as Experience[]
+export const fallbackEducations = content.educations as Education[]

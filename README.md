@@ -59,6 +59,7 @@ Re-running `php artisan db:seed` resets the portfolio content to the seed data, 
 |---|---|
 | `npm run typecheck` | TypeScript check |
 | `npm run build` | production build into `public/build` (type-checks first) |
+| `npm run build:static` | free static version for GitHub Pages into `dist-static/` (see below) |
 | `php artisan test` | PHP feature tests |
 | `vendor/bin/pint` | PHP code style |
 
@@ -100,6 +101,36 @@ Upload the PDF from **Admin → Profile → CV**. It is saved as `public/uploads
 Skills with an empty `level` are shown as tags; give a skill a 0–100 level to show it as a progress bar instead.
 
 ---
+
+## Free static site (GitHub Pages)
+
+Live: **https://xsamratx.github.io/** — the public one-page site only, hosted free on GitHub Pages
+from the repo [`xSAMRATx/xSAMRATx.github.io`](https://github.com/xSAMRATx/xSAMRATx.github.io).
+
+GitHub Pages can't run PHP, so this version has **no Laravel API, no admin and no database**:
+
+| | Laravel site | Static site |
+|---|---|---|
+| Content | from the database (edit in `/admin`) | from `resources/js/content/portfolio.json` |
+| Contact | form → saved as messages in admin | email / LinkedIn / GitHub links |
+| CV download | button appears after uploading a CV | not shown (no CV file is published) |
+| `/admin` | yes | no (shows the 404 page) |
+
+`portfolio.json` is the same data the seeder creates (same shape as the API). `tests/Feature/StaticContentTest.php` fails if
+the two drift, so after editing `PortfolioSeeder.php` update the JSON as well.
+
+**Redeploy after a content change:**
+
+```bash
+npm run build:static            # builds dist-static/ (index.html, 404.html, assets, og-image.png, .nojekyll...)
+```
+
+Then replace everything in your local clone of `xSAMRATx.github.io` with the contents of `dist-static/` (keep its `.git`
+folder and `README.md`), commit and push to `master`. GitHub Pages publishes it within a minute or two.
+
+How it works: `vite.static.config.ts` builds `resources/static/index.html` → `resources/js/static-main.tsx` (public pages
+only, no admin code) with `VITE_STATIC_SITE=true`. The SEO / Open Graph tags are filled from `portfolio.json`; the social
+preview image is `resources/static/public/og-image.png`. `npm run build` and `npm run dev` are unchanged.
 
 ## How it fits together
 

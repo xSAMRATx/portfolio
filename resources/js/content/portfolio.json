@@ -1,0 +1,291 @@
+{
+  "profile": {
+    "id": 1,
+    "name": "Md. Abdul Aziz Samrat",
+    "title": "Software Engineer · Laravel Backend & Vue/React Frontend",
+    "bio": "Software engineer focused on Laravel backends, with Vue/Nuxt and React on the front end. I build web applications across travel, e-commerce, ERP, HRM and CRM: RESTful APIs, payment and SMS gateway integrations, MySQL optimisation and production servers.",
+    "email": "mdabdulazizsamrat@gmail.com",
+    "location": "Dhaka, Bangladesh",
+    "social_links": {
+      "github": "https://github.com/xSAMRATx",
+      "linkedin": "https://www.linkedin.com/in/md-abdul-aziz-samrat-797738206/",
+      "twitter": null,
+      "website": null
+    },
+    "cv_url": null
+  },
+  "skills": [
+    {
+      "id": 1,
+      "name": "HTML5",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 2,
+      "name": "CSS3",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 3,
+      "name": "JavaScript (ES6+)",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 4,
+      "name": "TypeScript",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 5,
+      "name": "PHP",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 6,
+      "name": "SQL",
+      "category": "languages",
+      "level": null
+    },
+    {
+      "id": 7,
+      "name": "Laravel",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 8,
+      "name": "React.js",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 9,
+      "name": "Vue.js / Nuxt",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 10,
+      "name": "Tailwind CSS",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 11,
+      "name": "Bootstrap",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 12,
+      "name": "Inertia.js",
+      "category": "frameworks",
+      "level": null
+    },
+    {
+      "id": 13,
+      "name": "REST APIs",
+      "category": "backend",
+      "level": null
+    },
+    {
+      "id": 14,
+      "name": "Eloquent / Query Builder",
+      "category": "backend",
+      "level": null
+    },
+    {
+      "id": 15,
+      "name": "MySQL",
+      "category": "backend",
+      "level": null
+    },
+    {
+      "id": 16,
+      "name": "Git / GitHub",
+      "category": "tools",
+      "level": null
+    },
+    {
+      "id": 17,
+      "name": "Composer",
+      "category": "tools",
+      "level": null
+    },
+    {
+      "id": 18,
+      "name": "Nginx",
+      "category": "tools",
+      "level": null
+    },
+    {
+      "id": 19,
+      "name": "Postman",
+      "category": "tools",
+      "level": null
+    },
+    {
+      "id": 20,
+      "name": "Linux server management",
+      "category": "tools",
+      "level": null
+    },
+    {
+      "id": 21,
+      "name": "cPanel",
+      "category": "tools",
+      "level": null
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Role-Based Authentication",
+      "description": "Laravel custom role-based auth system with manual login, permissions, and middleware (no external packages).",
+      "tech_stack": [
+        "PHP",
+        "Laravel"
+      ],
+      "image_url": null,
+      "github_url": "https://github.com/xSAMRATx/role-based-authentication",
+      "live_url": null,
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "title": "Laravel React Inertia CRUD",
+      "description": "A CRUD application built with Laravel, React and Inertia.",
+      "tech_stack": [
+        "Laravel",
+        "React",
+        "Inertia",
+        "TypeScript"
+      ],
+      "image_url": null,
+      "github_url": "https://github.com/xSAMRATx/LARAVEL_REACT_INERTIA_CRUD",
+      "live_url": null,
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "title": "Front-end design collection",
+      "description": "16 HTML, CSS and JavaScript builds, live on GitHub Pages: Amazon, YouTube and Google clones, parallax site, restaurant, university, music and landing pages.",
+      "tech_stack": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "image_url": null,
+      "github_url": "https://github.com/xSAMRATx/PROJECT",
+      "live_url": "https://xsamratx.github.io/PROJECT/",
+      "featured": true,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "title": "Laravel Inertia Vue UI",
+      "description": "User interface built with Laravel, Inertia and Vue.",
+      "tech_stack": [
+        "Laravel",
+        "Inertia",
+        "Vue"
+      ],
+      "image_url": null,
+      "github_url": "https://github.com/xSAMRATx/User_Interface_Laravel_Inertia_Vue",
+      "live_url": null,
+      "featured": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "title": "ERP Sales Module",
+      "description": "Sales module for an ERP system, built with Laravel and Blade.",
+      "tech_stack": [
+        "Laravel",
+        "Blade"
+      ],
+      "image_url": null,
+      "github_url": "https://github.com/xSAMRATx/erp_sales_module",
+      "live_url": null,
+      "featured": false,
+      "order": 5
+    }
+  ],
+  "experiences": [
+    {
+      "id": 1,
+      "company": "CSN Bangladesh Ltd",
+      "role": "Software Engineer",
+      "start_date": "2026-06-10",
+      "end_date": null,
+      "is_current": true,
+      "description": "Working on CSN Travel with a Laravel API and a Vue/Nuxt front end.\nBuilt wholesaler promotional-deal syncing.\nBuilt scheduled Facebook Page auto-posting through the Meta Graph API."
+    },
+    {
+      "id": 2,
+      "company": "6amTech",
+      "role": "Software Engineer (PHP & Laravel Developer)",
+      "start_date": "2025-07-01",
+      "end_date": "2026-04-30",
+      "is_current": false,
+      "description": "Developed and maintained e-commerce products and client customisations.\nBuilt and maintained REST APIs for Flutter apps, tested with Postman.\nIntegrated payment and SMS gateways.\nManaged server environments for stability and uptime."
+    },
+    {
+      "id": 3,
+      "company": "CodeCloud Technology",
+      "role": "PHP & Laravel Developer",
+      "start_date": "2024-05-01",
+      "end_date": "2025-04-30",
+      "is_current": false,
+      "description": "Built ERP, CRM and HRM modules.\nLed payroll, attendance, leave and employee management features.\nImproved performance with advanced Laravel patterns.\nWorked with international clients via Fiverr and Upwork."
+    },
+    {
+      "id": 4,
+      "company": "CodeCloud Technology",
+      "role": "Junior Laravel Developer (Internship)",
+      "start_date": "2024-02-01",
+      "end_date": "2024-05-31",
+      "is_current": false,
+      "description": "Assisted on HRM and e-commerce platforms: database design, authentication and feature implementation."
+    }
+  ],
+  "educations": [
+    {
+      "id": 1,
+      "type": "degree",
+      "title": "M.Sc. in Computer Science",
+      "institution": "Jahangirnagar University",
+      "period": "2023",
+      "result": "CGPA 3.90",
+      "description": null,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "type": "degree",
+      "title": "B.Sc. in Computer Science & Engineering",
+      "institution": "Dhaka City College (National University)",
+      "period": "2021",
+      "result": "CGPA 3.27",
+      "description": null,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "type": "training",
+      "title": "Web Development – PHP with Laravel",
+      "institution": "PONDIT (BASIS & SEIP)",
+      "period": "Jun – Sep 2023",
+      "result": "Awarded Top Trainee",
+      "description": null,
+      "order": 3
+    }
+  ]
+}

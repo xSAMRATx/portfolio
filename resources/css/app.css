@@ -1,5 +1,7 @@
 @import '@fontsource-variable/inter';
 @import 'tailwindcss';
+/* Scan the React app explicitly, so the static GitHub Pages build (vite.static.config.ts) finds every class too. */
+@source '../js';
 
 /* Dark mode follows the `dark` class on <html> (set before first paint in app.blade.php). */
 @custom-variant dark (&:where(.dark, .dark *));
