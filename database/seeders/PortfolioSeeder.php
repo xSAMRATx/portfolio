@@ -16,10 +16,10 @@ class PortfolioSeeder extends Seeder
         Profile::query()->delete();
         Profile::create([
             'name' => 'Md. Abdul Aziz Samrat',
-            'title' => 'Software Engineer · PHP & Laravel Developer',
-            'bio' => 'PHP & Laravel developer building scalable web applications across e-commerce, ERP, HRM and CRM. '
-                .'I work on RESTful APIs, payment and SMS gateway integrations, MySQL optimisation and production servers, '
-                .'with React, Vue and Tailwind on the front end.',
+            'title' => 'Software Engineer · Laravel Backend & Vue/React Frontend',
+            'bio' => 'Software engineer focused on Laravel backends, with Vue/Nuxt and React on the front end. '
+                .'I build web applications across travel, e-commerce, ERP, HRM and CRM: RESTful APIs, payment and SMS gateway '
+                .'integrations, MySQL optimisation and production servers.',
             'email' => 'mdabdulazizsamrat@gmail.com',
             'location' => 'Dhaka, Bangladesh',
             'social_links' => [
@@ -62,9 +62,10 @@ class PortfolioSeeder extends Seeder
             ],
             [
                 'title' => 'Front-end design collection',
-                'description' => 'A collection of front-end design builds: Amazon clone, YouTube clone, Google home page, parallax site, restaurant, university, music and landing pages.',
-                'tech_stack' => ['HTML', 'CSS'],
+                'description' => '16 HTML, CSS and JavaScript builds, live on GitHub Pages: Amazon, YouTube and Google clones, parallax site, restaurant, university, music and landing pages.',
+                'tech_stack' => ['HTML', 'CSS', 'JavaScript'],
                 'repo' => 'PROJECT',
+                'live' => 'https://xsamratx.github.io/PROJECT/',
                 'featured' => true,
             ],
             [
@@ -90,7 +91,7 @@ class PortfolioSeeder extends Seeder
                 'tech_stack' => $p['tech_stack'],
                 'image' => null,
                 'github_url' => $p['repo'] ? 'https://github.com/xSAMRATx/'.$p['repo'] : null,
-                'live_url' => null,
+                'live_url' => $p['live'] ?? null,
                 'featured' => $p['featured'],
                 'order' => $i + 1,
             ]);
@@ -103,8 +104,9 @@ class PortfolioSeeder extends Seeder
                 'role' => 'Software Engineer',
                 'start_date' => '2026-06-10',
                 'end_date' => null,
-                'description' => 'Building travel-tech products with Laravel and Nuxt, including wholesaler promotional-deal syncing '
-                    .'and automated Facebook Page posting through the Meta Graph API.',
+                'description' => "Working on CSN Travel with a Laravel API and a Vue/Nuxt front end.\n"
+                    ."Built wholesaler promotional-deal syncing.\n"
+                    .'Built scheduled Facebook Page auto-posting through the Meta Graph API.',
             ],
             [
                 'company' => '6amTech',

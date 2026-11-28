@@ -6,9 +6,11 @@ import Navbar, { type NavLinkItem } from '../components/Navbar'
 import Icon from '../components/ui/Icon'
 import { useApi } from '../hooks/useApi'
 import { yearsSince } from '../lib/format'
+import { STATIC_SITE } from '../lib/site'
 import { socialItems } from '../lib/socials'
 import About from '../sections/About'
 import Contact from '../sections/Contact'
+import ContactLinks from '../sections/ContactLinks'
 import Education from '../sections/Education'
 import Experience from '../sections/Experience'
 import Hero from '../sections/Hero'
@@ -17,10 +19,11 @@ import Skills from '../sections/Skills'
 
 export default function HomePage() {
   const profile = useApi(publicApi.profile, fallbackProfile)
-  const skills = useApi(publicApi.skills, fallbackSkills)
-  const projects = useApi(publicApi.projects, fallbackProjects)
-  const experiences = useApi(publicApi.experiences, fallbackExperiences)
-  const educations = useApi(publicApi.educations, fallbackEducations)
+  // Lists start empty (skeletons show while loading); the built-in content is used only if the API fails.
+  const skills = useApi(publicApi.skills, fallbackSkills, [])
+  const projects = useApi(publicApi.projects, fallbackProjects, [])
+  const experiences = useApi(publicApi.experiences, fallbackExperiences, [])
+  const educations = useApi(publicApi.educations, fallbackEducations, [])
 
   const all = [profile, skills, projects, experiences, educations]
   const offline = all.some((s) => s.error)
@@ -66,7 +69,7 @@ export default function HomePage() {
         <Projects projects={projects.data} loading={projects.loading} />
         <Experience experiences={experiences.data} loading={experiences.loading} />
         <Education items={educations.data} />
-        <Contact email={profile.data.email} />
+        {STATIC_SITE ? <ContactLinks profile={profile.data} /> : <Contact email={profile.data.email} />}
       </main>
       <Footer name={profile.data.name} socials={socialItems(profile.data.social_links)} />
     </>
